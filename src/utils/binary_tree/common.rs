@@ -6,5 +6,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-pub mod prelude;
-pub mod utils;
+#[inline]
+pub fn max_size_in_level(level: usize) -> usize {
+    1 << level
+}

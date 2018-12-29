@@ -6,5 +6,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-pub mod prelude;
-pub mod utils;
+use super::common;
+
+#[test]
+fn max_size_in_level() {
+    let test_data = vec![(0, 1), (1, 2), (2, 4), (3, 8), (4, 16), (5, 32), (6, 64)];
+    for (input, expected) in test_data {
+        assert_eq!(expected, common::max_size_in_level(input));
+    }
+}
