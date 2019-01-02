@@ -3,5 +3,11 @@ name = "plant"
 version = "0.1.0"
 authors = ["Boyu Yang <yangby@cryptape.com>"]
 edition = "2018"
+description = "Tree data structures."
+homepage = "https://yangby-cryptape.github.io/rust-plant/"
+repository = "https://github.com/yangby-cryptape/rust-plant"
+keywords = ["tree"]
+categories = ["algorithms", "data-structures"]
+license = "Apache-2.0 OR MIT"
 
 [dependencies]
