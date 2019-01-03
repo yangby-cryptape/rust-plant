@@ -59,19 +59,9 @@ where
 
     #[inline]
     pub fn generate_proof_for_index(&self, node_index: usize) -> Proof<H> {
-        let path = complete::find_path_to_root(node_index);
+        let path = complete::find_path_from_root(node_index);
         let mut nodes = Vec::new();
-        {
-            let index = complete::find_sibling(node_index);
-            let data = self.nodes[index].clone();
-            let node = if full::is_left(index) {
-                Node::Left(data)
-            } else {
-                Node::Right(data)
-            };
-            nodes.push(node);
-        }
-        for index in path.into_iter() {
+        for index in path.into_iter().skip(1).rev() {
             let index = complete::find_sibling(index);
             let data = self.nodes[index].clone();
             let node = if full::is_left(index) {
@@ -136,19 +126,19 @@ where
                 let leaf_hash = leaf_data.hash();
                 tree.nodes[first_leaf_index + leaf_index] = leaf_hash;
             }
-            if max_level_undo > 0 {
+            if max_level_undo > 1 {
                 let max_size_at_last_level = common::max_size_in_level(max_level_undo);
                 if leaves_size != max_size_at_last_level {
-                    max_level_undo -= 1;
                     let range = ::std::ops::Range {
                         start: complete::first_index_in_level(max_level_undo),
                         end: first_leaf_index,
                     };
                     tree.calc_hash_for_range(range);
                 }
+                max_level_undo -= 1;
                 while max_level_undo != 0 {
-                    max_level_undo -= 1;
                     tree.calc_hash_for_level(max_level_undo);
+                    max_level_undo -= 1;
                 }
             }
             tree

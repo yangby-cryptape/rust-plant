@@ -10,8 +10,14 @@ use super::common;
 
 #[test]
 fn max_size_in_level() {
-    let test_data = vec![(0, 1), (1, 2), (2, 4), (3, 8), (4, 16), (5, 32), (6, 64)];
+    let test_data = vec![(1, 1), (2, 2), (3, 4), (4, 8), (5, 16), (6, 32), (7, 64)];
     for (input, expected) in test_data {
         assert_eq!(expected, common::max_size_in_level(input));
     }
+}
+
+#[test]
+#[should_panic]
+fn max_size_in_level_panic() {
+    let _ = common::max_size_in_level(0);
 }

@@ -6,7 +6,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#[allow(clippy::collapsible_if)]
 #[inline]
 pub fn max_size_in_level(level: usize) -> usize {
-    1 << level
+    if cfg!(test) || cfg!(debug_assertions) {
+        if level == 0 {
+            panic!("the minimum level is 1.");
+        }
+    }
+    1 << (level - 1)
 }

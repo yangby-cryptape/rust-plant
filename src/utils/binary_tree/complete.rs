@@ -28,13 +28,19 @@ pub fn max_level_by_nodes(nodes_size: usize) -> usize {
     if nodes_size == 0 {
         0
     } else {
-        USIZE_BITSIZE - 1 - (nodes_size.leading_zeros() as usize)
+        USIZE_BITSIZE - (nodes_size.leading_zeros() as usize)
     }
 }
 
+#[allow(clippy::collapsible_if)]
 #[inline]
 pub fn first_index_in_level(level: usize) -> usize {
-    (1 << level) - 1
+    if cfg!(test) || cfg!(debug_assertions) {
+        if level == 0 {
+            panic!("the minimum level is 1.");
+        }
+    }
+    (1 << (level - 1)) - 1
 }
 
 #[allow(clippy::collapsible_if)]
@@ -70,14 +76,17 @@ pub fn find_children(node_index: usize) -> (usize, usize) {
 }
 
 #[inline]
-pub fn find_path_to_root(mut node_index: usize) -> Vec<usize> {
-    let mut ret = Vec::new();
-    if node_index != 0 {
-        node_index = (node_index - 1) / 2;
-        while node_index != 0 {
-            ret.push(node_index);
-            node_index = (node_index - 1) / 2;
+pub fn find_path_from_root(node_index: usize) -> Vec<usize> {
+    if node_index == 0 {
+        vec![0]
+    } else {
+        let level = max_level_by_nodes(node_index + 1);
+        let mut ret = Vec::with_capacity(level);
+        let node_index_in_math = node_index + 1;
+        for level in (0..level).rev() {
+            ret.push((node_index_in_math >> level) - 1);
         }
+        debug_assert_eq!(ret.len(), level);
+        ret
     }
-    ret
 }
